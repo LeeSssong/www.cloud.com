@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form action="{:url('uploadFile')}" method="post" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <input type="submit" value="提交">
+</form>
+
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+    function sc() {
+        let animateimg = $("#f").val(); //获取上传的图片名 带//
+        let imgarr = animateimg.split('\\');//分割
+        let myimg = imgarr[imgarr.length-1];//去掉//获取图片名
+        let houzui = myimg.lastIndexOf('.');//获取 . 出现的位置
+        let ext = myimg.substring(houzui, myimg.length).toUpperCase();//切割 . 获取后缀
+        let file = $("#f").get(0).files[0];//获取上传的文件
+        let fileSize = file.size;
+        let maxSize = 1048576 * 10; //最大10MB
+        if (ext !='.PNG' && ext !='.GIF' && ext !='.JPG' && ext !='.JPEG' && ext !='.BMP'){
+            alert('文件类型错误，请上传图片类型');
+            return false;
+        }else if (parseInt(fileSize) >= parseInt(maxSize)){
+            alert('上传文件大小不能超出10MB');
+            return false;
+        }else {
+            alert('this');
+            let data = new FormData($("#form1"));
+            $.ajax({
+                url: "uploadFile",    //后台处理函数
+                type: "POST",
+                data: data,
+                dataType: "json",
+                cache: false,
+                processData: false,
+                contentType: false,
+                //若传输成功则执行
+                success: function (data) {
+                    if (data.status){ //status为返回状态码，若上传成功则为1，失败则为0
+                        alert(data.message);
+                    }else {
+                        alert('fail');
+                    }
+                },
+                //若传输失败则执行
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest.status);
+                    alert(XMLHttpRequest.readyState);
+                    alert(textStatus);
+                }
+
+            })
+        }
+    }
+</script>
+</body>
+</html>
