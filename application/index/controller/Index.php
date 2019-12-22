@@ -14,7 +14,6 @@ class Index extends Base
     //应用入口
     public function index()
     {
-        $this->isLogin();
         $this->redirect('Img/index');
     }
 
